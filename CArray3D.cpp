@@ -8,61 +8,51 @@ class CArray3D
 // 在此处补充你的代码
 	public:
 	class CArray2D{
-		T** ptr;
-		int width, height;
-		public:
-		CArray2D(){ptr = nullptr;}
-		CArray2D(int width, int height): width(width), height(height){
-			ptr = new T*[height];
-			for(int i = 0; i < height; ++i){
-				ptr[i] = new T[width];
-			}
-		}
-		CArray2D(const CArray2D& src){
-			if(src.ptr == nullptr)
-				ptr = nullptr;
-			else{
-				width = src.width;
-				height = src.height;
-				ptr = new T*[height];
-				for(int i = 0; i < height; ++i){
-					ptr[i] = new T[width];
-				}
-				for(int i = 0; i < height; ++i)
-					for(int j = 0; j < width; ++j)
-						ptr[i][j] = src.ptr[i][j];
-			}
-		}
-		CArray2D& operator=(const CArray2D& src){
-			if(src.ptr == nullptr)
-				ptr = nullptr;
-			else{
-				width = src.width;
-				height = src.height;
-				ptr = new T*[height];
-				for(int i = 0; i < height; ++i){
-					ptr[i] = new T[width];
-				}
-				for(int i = 0; i < height; ++i)
-					for(int j = 0; j < width; ++j)
-						ptr[i][j] = src.ptr[i][j];
-			}
+		T* ptr;
+        int height, width;
+        public:
+        CArray2D(){ptr = nullptr;}
+        CArray2D(int height, int width):
+        height(height), width(width)
+        {
+            ptr = new T[height * width];
+        }
+        CArray2D(const CArray2D& src){
+			height = src.height;
+			width = src.width;
+            if(src.ptr == nullptr)
+                ptr = nullptr;
+            else{
+                ptr = new T[height * width];
+                for(int i = 0; i < height * width; ++i){
+                    ptr[i] = src.ptr[i];
+                }
+            }
+        }
+        CArray2D& operator=(const CArray2D& src){
+			height = src.height;
+			width = src.width;
+            if(src.ptr == nullptr)
+                ptr = nullptr;
+            else{
+                ptr = new T[height * width];
+                for(int i = 0; i < height * width; ++i){
+                    ptr[i] = src.ptr[i];
+                }
+            }
 			return *this;
-		}
-		T* operator[](int i){
-			return *(ptr + i);
-		}
-		operator void*(){
-			return ptr;
-		}
-		~CArray2D(){
-			if(ptr != nullptr){
-				for(int i = 0; i < height; ++i){
-					delete [] ptr[i];
-				}
-				delete [] ptr;
-			}
-		}
+        }
+        T* operator[](int i){
+            return ptr + i * width;
+        }
+        operator void*(){
+            return ptr;
+        }
+        ~CArray2D(){
+            if(ptr != nullptr){
+                delete [] ptr;
+            }
+        }
 	};
 	CArray2D* ptr;
 	int layer, height, width;
